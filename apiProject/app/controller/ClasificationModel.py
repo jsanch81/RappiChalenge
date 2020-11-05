@@ -1,5 +1,6 @@
 import sys
 import os
+import json
 PACKAGE_PARENT = '..'
 SCRIPT_DIR = os.path.dirname(os.path.realpath(os.path.join(os.getcwd(), os.path.expanduser(__file__))))
 sys.path.append(os.path.normpath(os.path.join(SCRIPT_DIR, PACKAGE_PARENT)))
@@ -11,7 +12,7 @@ import pickle
 
 class ClasificationModel:
 
-    def __init__(self, data):
+    def __init__(self, data=None):
         self.mongoConnection = MongoConnection().get_instance()
         script_dir = os.path.dirname(__file__)
         rel_path = "modelpkl/scaler.sav"
@@ -29,23 +30,23 @@ class ClasificationModel:
         return datetime.strptime(date_str,'%Y-%m-%dT%H:%M:%SZ')
 
     def predict(self):
-        self.transforData()
+        self.transfor_data()
         data = self.model.predict(self.data.values)
         data = pd.DataFrame(data.reshape(-1,1), columns=["taken_prediction"])
-        result = pd.concat([self.inverseTransform(), data], axis=1)
+        result = pd.concat([self.inverse_transform(), data], axis=1)
         self.mongoConnection.save_data(result.to_dict("records"))
         return result
     
-    def getEstimators(self):
-        return list(self.mongoConnection.get_data())
+    def get_estimators(self):
+        return {i:doc for i,doc in enumerate(self.mongoConnection.get_data())}
 
-    def inverseTransform(self):
+    def inverse_transform(self):
         return pd.DataFrame(
                             self.scaler.inverse_transform(self.data),
                             columns=['store_id','to_user_distance','to_user_elevation','total_earning','hour','weekday','month']
                )
 
-    def transforData(self):
+    def transfor_data(self):
         df = self.data
         df["created_at"] = df["created_at"].map(lambda x: self.to_datetime(x))
         df["hour"] = df["created_at"].map(lambda x: x.hour)

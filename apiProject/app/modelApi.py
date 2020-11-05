@@ -12,5 +12,11 @@ def predict():
     result = model.predict()
     return result.to_dict('index')
 
+@app.route('/api/get/estimators/', methods=['GET'])
+def get_estimators():
+    model = ClasificationModel()
+    result = model.get_estimators()
+    return result
+
 if __name__ == '__main__':
     app.run(debug=True, host='0.0.0.0')

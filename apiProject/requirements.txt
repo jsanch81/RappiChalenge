@@ -5,4 +5,3 @@ datetime
 pickle-mixin
 flask
 scikit-learn==0.21.2
-

@@ -30,4 +30,4 @@ class MongoConnection:
         return self.__instance__.col.insert_many(data, ordered=False)
 
     def get_data(self):
-        return self.__instance__.col.find({})
+        return self.__instance__.col.find({},{'_id': 0})
