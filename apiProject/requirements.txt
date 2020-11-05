@@ -1,0 +1,8 @@
+numpy>=1.11.0
+pandas
+pymongo==3.9.0
+datetime 
+pickle-mixin
+flask
+scikit-learn==0.21.2
+
