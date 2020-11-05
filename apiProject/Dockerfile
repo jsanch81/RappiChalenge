@@ -5,10 +5,12 @@ WORKDIR /usr/src/app
 COPY requirements.txt ./
 RUN pip install --no-cache-dir -r requirements.txt
 
-COPY . .
+COPY ./app .
 
-ENV FLASK_APP ./api/modelApi.py
+#ENV FLASK_APP ./api/modelApi.py
 
 EXPOSE 5000
 
-CMD [ "flask", "run"]
+ENTRYPOINT [ "python" ]
+
+CMD [ "modelApi.py" ]
